@@ -11,7 +11,6 @@ int main(void)
         club.setType("some other type of club");
         bob.attack();
     }
-
     {
         Weapon club = Weapon("crude spiked club");
         HumanB jim("Jim");
