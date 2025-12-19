@@ -35,20 +35,11 @@ int main(int argc, char *argv[])
     bool found = false;
     size_t pos = 0;
     while(std::getline(inputFile, line)) {
-        if ((pos = line.find(s1)) != std::string::npos)
-        {
+       while ((pos = line.find(s1)) != std::string::npos) {
             found = true;
-            std::string newLine;
-            newLine.append(line, 0, pos);
-            newLine.append(s2);
-            newLine.append(line, pos + s1.length(), line.length() - (pos + s1.length()));
-            line = newLine;
-            outputFile << line << std::endl;
+            line = line.substr(0, pos) + s2 + line.substr(pos + s1.length());
         }
-        else
-        {
-            outputFile << line << std::endl;
-        }
+        outputFile << line << std::endl;
     }
     if (!found)
     {
