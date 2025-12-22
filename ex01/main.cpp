@@ -2,9 +2,13 @@
 
 int main(void)
 {
-    int zNumber = 5;
+    int zNumber = -1;
     Zombie *zombies = zombieHorde(zNumber, "Bob");
-
+    if (zombies == NULL)
+    {
+        std::cout << "Failed to create zombie horde." << std::endl;
+        return (1);
+    }
     for(int i = 0; i < zNumber; i++)
         zombies[i].announce();
     delete[] zombies;

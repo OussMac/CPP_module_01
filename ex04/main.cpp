@@ -1,68 +1,57 @@
-#include <fstream>
-#include <iostream>
-#include <string>
+#include "replace.hpp"
 
-
-int main(int argc, char *argv[]) 
+std::string interpretEscapes(const std::string &src)
 {
-    if (argc != 4) {
-        std::cout << "Usage ./Replace <filename> s1 s2" << std::endl;
-        return 1;
+    std::string result;
+    result.reserve(src.size());
+
+    for (size_t i = 0; i < src.size(); i++)
+    {
+        if (src[i] == '\\' && i + 1 < src.size())
+        {
+            char next = src[i + 1];
+            if (next == 'n') {
+                result += '\n';
+                i++;
+                continue;
+            }
+            if (next == 't') {
+                result += '\t';
+                i++;
+                continue;
+            }
+        }
+        result += src[i];
     }
-    if (argv[2][0] == '\0' || argv[3][0] == '\0') {
-        std::cout << "Replace strings must not be empty." << std::endl;
-        return 1;
-    }
-    std::ifstream inputFile(argv[1]);
-    if (!inputFile.is_open()) {
-        std::cout << "Failed to open file: " << argv[1] << std::endl;
+    return result;
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc != 4)
+    {
+        std::cout << "Usage: ./Replace <filename> <s1> <s2>" << std::endl;
         return 1;
     }
 
     std::string filename = argv[1];
-    std::string s1 = argv[2];
-    std::string s2 = argv[3];
+    std::string raw_s1 = argv[2];
+    std::string raw_s2 = argv[3];
 
-    
-    std::string preLine;
-    bool preFound = false;
-    size_t prePos = 0;
-    while (std::getline(inputFile, preLine)) {
-        while ((prePos = preLine.find(s1)) != std::string::npos) {
-            preFound = true;
-            if (preFound)
-                break ;
-        }
-    }
-    if (!preFound)
+    std::string s1 = interpretEscapes(raw_s1);
+    std::string s2 = interpretEscapes(raw_s2);
+
+    if (s1.empty())
     {
-        inputFile.close();
-        std::cout << "String '" << s1 << "' not found in file."<< std::endl;
+        std::cout << "s1 must not be empty." << std::endl;
         return 1;
     }
-    inputFile.clear();
-    inputFile.seekg(0);
-    
-    std::string out_filename = filename + ".replace";
-    std::ofstream outputFile(out_filename.c_str());
-    if (!outputFile.is_open()) {
-        inputFile.close();
-        std::cout << "Failed to create output file." << std::endl;
+
+    if (!performReplace(filename, s1, s2))
+    {
+        std::cout << "Error during replacement." << std::endl;
         return 1;
     }
-    std::string line;
-    size_t pos = 0;
-    while(std::getline(inputFile, line)) {
-       while ((pos = line.find(s1)) != std::string::npos) {
-            line = line.substr(0, pos) + s2 + line.substr(pos + s1.length());
-        }
-        if (!inputFile.eof())
-            outputFile << line << std::endl;
-        else
-            outputFile << line;
-    }
-    inputFile.close();
-    outputFile.close();
 
     return 0;
 }

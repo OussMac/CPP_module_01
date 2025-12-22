@@ -1,7 +1,8 @@
 CPP = c++ -std=c++98
 FLAGS = -Wall -Werror -Wextra
 NAME = Replace
-SRC = main.cpp
+HEADER = replace.hpp
+SRC = main.cpp replace.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: $(NAME)
@@ -9,7 +10,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CPP) $(FLAGS) $^ -o $(NAME)
 
-%.o:%.cpp
+%.o:%.cpp $(HEADER)
 	$(CPP) $(FLAGS) -c $< -o $@
 
 re: fclean all
