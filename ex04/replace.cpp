@@ -17,7 +17,6 @@ static std::string replaceAllOccurrences(const std::string &line, const std::str
     return result;
 }
 
-
 bool performReplace(const std::string &filename,  const std::string &s1, const std::string &s2)
 {
     std::ifstream inputFile(filename.c_str());
