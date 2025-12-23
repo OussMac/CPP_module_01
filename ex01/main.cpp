@@ -2,7 +2,7 @@
 
 int main(void)
 {
-    int zNumber = -1;
+    int zNumber = 5;
     Zombie *zombies = zombieHorde(zNumber, "Bob");
     if (zombies == NULL)
     {
